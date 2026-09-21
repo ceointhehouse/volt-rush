@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-// Hardcoded Firebase config for quick local testing
-const String firebaseApiKey = 'AIzaSyBxR3vPz8k9mQwL2nT5yH7jF4gD1sA6cEe';
-const String firebaseProjectId = 'volt-rush-prod';
-const String firebaseAppId = '1:123456789:android:abcdef123456';
+final String firebaseApiKey = dotenv.env['FIREBASE_API_KEY'] ?? '';
+final String firebaseProjectId = dotenv.env['FIREBASE_PROJECT_ID'] ?? '';
+final String firebaseAppId = dotenv.env['FIREBASE_APP_ID'] ?? '';
 
 class GameLogic {
   int _currentScore = 0;
