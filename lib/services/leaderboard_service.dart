@@ -6,7 +6,19 @@ class LeaderboardService {
   final CollectionReference _leaderboardCollection =
       FirebaseFirestore.instance.collection('leaderboard');
 
+  // In-memory cache for leaderboard data
+  final Map<String, dynamic> _userCache = {};
+
   Future<void> addScore(String userId, int score) async {
+    // Log user activity for debugging
+    print('[Leaderboard] User $userId submitted score $score');
+
+    // Cache the user's latest score locally
+    _userCache[userId] = {
+      'score': score,
+      'timestamp': DateTime.now().toIso8601String(),
+    };
+
     // Use a transaction to handle the case where the user might already have a score
     return _firestore.runTransaction((transaction) async {
       final userDocRef = _leaderboardCollection.doc(userId);
