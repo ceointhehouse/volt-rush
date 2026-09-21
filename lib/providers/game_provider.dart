@@ -38,7 +38,7 @@ class GameProvider with ChangeNotifier {
       _leaderboardService.addScore(uid, _gameLogic.currentScore);
     }
     _gameLogic.bankScore();
-    _isBanking = false;
+    Future.microtask(() => _isBanking = false);
   }
 
   void resetHighScore() {
