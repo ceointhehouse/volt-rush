@@ -28,14 +28,15 @@ class GameProvider with ChangeNotifier {
   // Track if a bank is in progress to prevent double-banking
   bool _isBanking = false;
 
-  void bankScore() {
+  void bankScore() async {
     if (_isBanking) return;
     _isBanking = true;
 
     final uid = _authProvider?.user?.uid;
     if (uid != null) {
       // Fire-and-forget leaderboard write
-      _leaderboardService.addScore(uid, _gameLogic.currentScore);
+      await _leaderboardService.addScore(uid, _gameLogic.currentScore);
+    _isBanking = false;
     }
     _gameLogic.bankScore();
     _isBanking = false;
