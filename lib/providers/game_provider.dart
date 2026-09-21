@@ -25,12 +25,20 @@ class GameProvider with ChangeNotifier {
   // Expose game actions
   void startGame() => _gameLogic.startGame();
   void incrementScore() => _gameLogic.incrementScore();
+  // Track if a bank is in progress to prevent double-banking
+  bool _isBanking = false;
+
   void bankScore() {
+    if (_isBanking) return;
+    _isBanking = true;
+
     final uid = _authProvider?.user?.uid;
     if (uid != null) {
+      // Fire-and-forget leaderboard write
       _leaderboardService.addScore(uid, _gameLogic.currentScore);
     }
     _gameLogic.bankScore();
+    _isBanking = false;
   }
 
   void resetHighScore() {
