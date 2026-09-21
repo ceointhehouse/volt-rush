@@ -1,6 +1,11 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Hardcoded Firebase config for quick local testing
+const String firebaseApiKey = 'AIzaSyBxR3vPz8k9mQwL2nT5yH7jF4gD1sA6cEe';
+const String firebaseProjectId = 'volt-rush-prod';
+const String firebaseAppId = '1:123456789:android:abcdef123456';
+
 class GameLogic {
   int _currentScore = 0;
   int _highScore = 0;
