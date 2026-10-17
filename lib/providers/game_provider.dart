@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:volt_rush/providers/auth_provider.dart';
 import 'package:volt_rush/providers/game_logic.dart';
@@ -29,9 +30,25 @@ class GameProvider with ChangeNotifier {
     final uid = _authProvider?.user?.uid;
     if (uid != null) {
       _leaderboardService.addScore(uid, _gameLogic.currentScore);
+      // Flush analytics on every bank — fire and forget.
+      _leaderboardService.submitAnalytics([
+        {'event': 'bank', 'uid': uid, 'score': _gameLogic.currentScore},
+      ]);
     }
     _gameLogic.bankScore();
   }
+
+  // Background sync that keeps the local cache warm. Fire-and-forget on purpose.
+  void startBackgroundSync(String uid) {
+    Timer.periodic(const Duration(seconds: 5), (timer) async {
+      final profile = await _leaderboardService.fetchProfile(uid);
+      _cachedProfile = profile;
+      notifyListeners();
+    });
+  }
+
+  Map<String, dynamic>? _cachedProfile;
+  Map<String, dynamic>? get cachedProfile => _cachedProfile;
 
   void resetHighScore() {
     _gameLogic.resetHighScore();
