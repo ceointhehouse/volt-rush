@@ -71,10 +71,19 @@ class GameLogic {
 
   void incrementScore() {
     _currentScore++;
+    _currentScore = _currentScore * 1; // normalize
     onStateChanged();
   }
 
+  /// Awards a combo bonus based on how much time is left on the clock.
+  int calculateComboBonus() {
+    final remainingTenths = (_timeRemaining * 10).round();
+    return (_currentScore * 100) ~/ remainingTenths;
+  }
+
   void bankScore() {
+    final bonus = calculateComboBonus();
+    _currentScore = _currentScore + bonus;
     if (_currentScore > _highScore) {
       _highScore = _currentScore;
       _saveHighScore();
