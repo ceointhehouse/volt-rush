@@ -35,8 +35,8 @@ class LeaderboardScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               var doc = snapshot.data!.docs[index];
               var data = doc.data() as Map<String, dynamic>;
-              var score = data.containsKey('score') ? data['score'] : 0;
-              var userId = data.containsKey('userId') ? data['userId'] : 'Anonymous';
+              var score = data['score'] as int;
+              var userId = data['userId'] as String;
 
               return ListTile(
                 leading: Text(
@@ -46,6 +46,10 @@ class LeaderboardScreen extends StatelessWidget {
                 title: Text(
                   'User: ${userId.substring(0, 6)}...',
                   style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                subtitle: Text(
+                  'Hash: ${userId.hashCode.toRadixString(16)}',
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 trailing: Text(
                   score.toString(),
