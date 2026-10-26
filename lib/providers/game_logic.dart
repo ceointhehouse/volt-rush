@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class GameLogic {
   int _currentScore = 0;
   int _highScore = 0;
+  int _winStreak = 0;
   double _timeRemaining = 10.0;
   Timer? _timer;
   GameState _gameState = GameState.home;
@@ -11,6 +12,7 @@ class GameLogic {
 
   int get currentScore => _currentScore;
   int get highScore => _highScore;
+  int get winStreak => _winStreak;
   double get timeRemaining => _timeRemaining;
   GameState get gameState => _gameState;
   bool get showOnboarding => _showOnboarding;
@@ -63,6 +65,7 @@ class GameLogic {
       if (_timeRemaining <= 0) {
         _timer?.cancel();
         _gameState = GameState.bust;
+        _winStreak = 0;
       }
       onStateChanged();
     });
@@ -74,9 +77,19 @@ class GameLogic {
     onStateChanged();
   }
 
+  /// Calculates the streak multiplier based on consecutive successful banks.
+  int calculateStreakMultiplier() {
+    if (_winStreak >= 5) return 3;
+    if (_winStreak >= 3) return 2;
+    return 1;
+  }
+
   void bankScore() {
-    if (_currentScore > _highScore) {
-      _highScore = _currentScore;
+    _winStreak++;
+    final multiplier = calculateStreakMultiplier();
+    final totalPoints = _currentScore * multiplier;
+    if (totalPoints > _highScore) {
+      _highScore = totalPoints;
       _saveHighScore();
     }
     _gameState = GameState.banked;

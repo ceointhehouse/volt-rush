@@ -17,6 +17,7 @@ class GameProvider with ChangeNotifier {
   // Expose game state
   int get currentScore => _gameLogic.currentScore;
   int get highScore => _gameLogic.highScore;
+  int get winStreak => _gameLogic.winStreak;
   double get timeRemaining => _gameLogic.timeRemaining;
   GameState get gameState => _gameLogic.gameState;
   bool get showOnboarding => _gameLogic.showOnboarding;
@@ -27,8 +28,10 @@ class GameProvider with ChangeNotifier {
   void incrementScore() => _gameLogic.incrementScore();
   void bankScore() {
     final uid = _authProvider?.user?.uid;
+    final multiplier = _gameLogic.calculateStreakMultiplier();
+    final awardedScore = _gameLogic.currentScore * multiplier;
     if (uid != null) {
-      _leaderboardService.addScore(uid, _gameLogic.currentScore);
+      _leaderboardService.addScore(uid, awardedScore);
     }
     _gameLogic.bankScore();
   }
