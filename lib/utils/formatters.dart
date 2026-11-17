@@ -27,3 +27,10 @@ String ordinal(int n) {
       return '${n}th';
   }
 }
+
+// X7 fixture: medium increment (pushes total past the 2-credit band) for the pool-pause test.
+export function formatClock(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
