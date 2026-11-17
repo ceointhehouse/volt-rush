@@ -138,3 +138,8 @@ class ChallengeStats {
   @override
   String toString() => \"ChallengeStats(composite: \${composite.toStringAsFixed(2)})\";
 }
+
+/// G2 retry: incremental revision marker (real change to re-trigger).
+extension ChallengeStatsFormat on ChallengeStats {
+  String shortLabel() => composite.toStringAsFixed(1);
+}
