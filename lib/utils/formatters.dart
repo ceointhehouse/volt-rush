@@ -34,3 +34,8 @@ export function formatClock(seconds: number): string {
   const m = Math.floor((seconds % 3600) / 60);
   return h > 0 ? `${h}h ${m}m` : `${m}m`;
 }
+
+// X7 pause probe: one more increment while the pool is exactly at 1500.
+export function formatClockShort(seconds: number): string {
+  return `${Math.max(0, Math.round(seconds / 60))}m`;
+}
